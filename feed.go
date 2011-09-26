@@ -128,34 +128,6 @@ func (this *Feed) Fetch(uri string) (err os.Error) {
 // true). If this function returns true, you can be sure that a fresh feed
 // update will be performed.
 func (this *Feed) CanUpdate() bool {
-	// Make sure we are not within the specified cache-limit.
-	// This ensures we don't request data too often.
-	utc := time.UTC()
-	if utc.Seconds()-this.lastupdate < int64(this.CacheTimeout*60) {
-		return false
-	}
-
-	// If skipDays or skipHours are set in the RSS feed, use these to see if
-	// we can update.
-	if len(this.Channels) == 0 && this.Type == "rss" {
-		if this.EnforceCacheLimit && len(this.Channels[0].SkipDays) > 0 {
-			for _, v := range this.Channels[0].SkipDays {
-				//if v == utc.Weekday() {
-				//	return false
-				//}
-			}
-		}
-
-		if this.EnforceCacheLimit && len(this.Channels[0].SkipHours) > 0 {
-			for _, v := range this.Channels[0].SkipHours {
-				if v == utc.Hour {
-					return false
-				}
-			}
-		}
-	}
-
-	this.lastupdate = utc.Seconds()
 	return true
 }
 
